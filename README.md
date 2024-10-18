@@ -54,6 +54,8 @@ flutter run
 Folder Structure
 bash
 Copy code
+
+
 lib/
 │
 ├── main.dart           # Main entry point of the app
@@ -69,6 +71,11 @@ lib/
 └── utils/              # Utilities and helpers
     └── theme.dart      # Light and dark theme configurations
 Dependencies
+
+
+
+
+
 This project relies on the following Flutter packages:
 
 yaml
