@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/settings_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -8,10 +10,15 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _selectedLanguage = 'English';
 
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+
+    // Set initial values for controllers
+    _usernameController.text = settingsProvider.username;
+    _passwordController.text = settingsProvider.password;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -34,7 +41,6 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            // Username Setting
             Text(
               "Change Username",
               style: TextStyle(
@@ -51,7 +57,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SizedBox(height: 30),
-            // Password Setting
             Text(
               "Change Password",
               style: TextStyle(
@@ -69,7 +74,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SizedBox(height: 30),
-            // Language Setting
             Text(
               "Language",
               style: TextStyle(
@@ -79,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             DropdownButton<String>(
-              value: _selectedLanguage,
+              value: settingsProvider.language,
               items: ['English', 'Spanish', 'French']
                   .map((language) => DropdownMenuItem(
                         value: language,
@@ -87,17 +91,20 @@ class _SettingsPageState extends State<SettingsPage> {
                       ))
                   .toList(),
               onChanged: (newLanguage) {
-                setState(() {
-                  _selectedLanguage = newLanguage!;
-                });
+                settingsProvider.updateLanguage(newLanguage!);
               },
             ),
             Spacer(),
-            // Save Button
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Add save logic here
+                  settingsProvider.updateUsername(_usernameController.text);
+                  settingsProvider.updatePassword(_passwordController.text);
+
+                  // Optionally, show a confirmation
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Settings updated')),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
