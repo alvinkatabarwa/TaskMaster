@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'todo.dart';
-
+import 'settings.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -41,7 +41,10 @@ class DashboardScreen extends StatelessWidget {
                             const SizedBox(width: 10),
                             IconButton(
                               onPressed: () {
-                                // Handle settings
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                                );
                               },
                               icon: const Icon(
                                 Icons.settings,
