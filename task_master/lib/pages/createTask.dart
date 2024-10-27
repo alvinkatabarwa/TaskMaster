@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
-import 'todo.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Add Task',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: AddTaskScreen(),
-    );
-  }
-}
+import 'package:provider/provider.dart';
+import '../providers/task_providers.dart';
 
 class AddTaskScreen extends StatelessWidget {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController detailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +16,14 @@ class AddTaskScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text('Add Task',
-        style: TextStyle(
+        title: Text(
+          'Add Task',
+          style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-          ),),
+          ),
+        ),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -40,6 +31,7 @@ class AddTaskScreen extends StatelessWidget {
         child: Column(
           children: [
             TextField(
+              controller: titleController,
               decoration: InputDecoration(
                 labelText: 'Title',
                 border: UnderlineInputBorder(),
@@ -47,6 +39,7 @@ class AddTaskScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
             TextField(
+              controller: detailController,
               decoration: InputDecoration(
                 labelText: 'Detail',
                 border: UnderlineInputBorder(),
@@ -64,8 +57,15 @@ class AddTaskScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TaskListScreen()));
+                  final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+                  final newTask = Task(
+                    title: titleController.text,
+                    description: detailController.text,
+                  );
+                  taskProvider.addTask(newTask);  // Adds the task to global state
+
+                  // Navigate back to the previous screen
+                  Navigator.pop(context);
                 },
                 child: Text(
                   'ADD',
