@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'register.dart';
+import 'package:provider/provider.dart';
 import 'dashboard.dart';
+import 'register.dart';
+import '../providers/login_providers.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loginProvider = Provider.of<LoginProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -39,6 +44,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 40),
               // Email TextField
               TextField(
+                onChanged: (value) => loginProvider.updateEmail(value),
                 decoration: InputDecoration(
                   hintText: 'Enter your Email',
                   filled: true,
@@ -55,6 +61,7 @@ class LoginScreen extends StatelessWidget {
               // Password TextField
               TextField(
                 obscureText: true,
+                onChanged: (value) => loginProvider.updatePassword(value),
                 decoration: InputDecoration(
                   hintText: 'Enter Password',
                   filled: true,
@@ -72,7 +79,9 @@ class LoginScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Forgot password logic
+                  },
                   child: const Text(
                     'Forget password ?',
                     style: TextStyle(
@@ -85,24 +94,26 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 20),
               // Login Button
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen()),
-                  );
-                },
+                onPressed: loginProvider.isLoginValid
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DashboardScreen()),
+                        );
+                      }
+                    : null, // Disable button if inputs are invalid
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal, // Background color
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                  backgroundColor: Colors.teal,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 100, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
                 child: const Text(
                   'Login',
-                  style: TextStyle(fontSize: 18,
-                  color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 20),
@@ -118,7 +129,8 @@ class LoginScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegistrationPage()),
+                        MaterialPageRoute(
+                            builder: (context) => RegistrationPage()),
                       );
                     },
                     child: const Text(

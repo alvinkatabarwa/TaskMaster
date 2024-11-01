@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Task {
-  final String title;
-  final String description;
+  String title;
+  String description;
   bool isCompleted;
 
   Task({required this.title, required this.description, this.isCompleted = false});
@@ -27,4 +27,14 @@ class TaskProvider with ChangeNotifier {
     task.isCompleted = !task.isCompleted;
     notifyListeners();
   }
+
+  // Method to update a task's title and description
+  void updateTask(int index, String newTitle, String newDescription) {
+    if (index >= 0 && index < _tasks.length) {
+      _tasks[index].title = newTitle;
+      _tasks[index].description = newDescription;
+      notifyListeners();
+    }
+  }
 }
+

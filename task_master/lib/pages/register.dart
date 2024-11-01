@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/registration_providers.dart';
 import 'login.dart';
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Registration Page',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: RegistrationPage(),
-    );
-  }
-}
 
 class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final registrationProvider = Provider.of<RegistrationProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -28,7 +16,7 @@ class RegistrationPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20), // Add some space at the top
+              SizedBox(height: 20),
               Text(
                 'Welcome to Onboard!',
                 style: TextStyle(
@@ -45,13 +33,14 @@ class RegistrationPage extends StatelessWidget {
               SizedBox(height: 40),
               // Full Name TextField
               TextField(
+                onChanged: (value) => registrationProvider.updateFullName(value),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                     borderSide: BorderSide.none,
+                    borderSide: BorderSide.none,
                   ),
-                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20),
                   labelText: 'Enter your full name',
                   filled: true,
                   fillColor: Colors.white,
@@ -60,13 +49,14 @@ class RegistrationPage extends StatelessWidget {
               SizedBox(height: 20),
               // Email TextField
               TextField(
+                onChanged: (value) => registrationProvider.updateEmail(value),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                     borderSide: BorderSide.none,
+                    borderSide: BorderSide.none,
                   ),
-                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20),
                   labelText: 'Enter your Email',
                   filled: true,
                   fillColor: Colors.white,
@@ -76,13 +66,14 @@ class RegistrationPage extends StatelessWidget {
               // Password TextField
               TextField(
                 obscureText: true,
+                onChanged: (value) => registrationProvider.updatePassword(value),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                     borderSide: BorderSide.none,
+                    borderSide: BorderSide.none,
                   ),
-                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20),
                   labelText: 'Enter Password',
                   filled: true,
                   fillColor: Colors.white,
@@ -92,13 +83,15 @@ class RegistrationPage extends StatelessWidget {
               // Confirm Password TextField
               TextField(
                 obscureText: true,
+                onChanged: (value) =>
+                    registrationProvider.updateConfirmPassword(value),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+                    borderSide: BorderSide.none,
                   ),
-                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20),
                   labelText: 'Confirm password',
                   filled: true,
                   fillColor: Colors.white,
@@ -107,10 +100,13 @@ class RegistrationPage extends StatelessWidget {
               SizedBox(height: 40),
               // Register Button
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Register action (for example, save or navigate)
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal, // background color
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                  backgroundColor: Colors.teal,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

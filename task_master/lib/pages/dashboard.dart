@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/task_providers.dart';
 import 'todo.dart';
 import 'settings.dart';
+
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -80,7 +83,6 @@ class DashboardScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Simple clock widget (static image, for dynamic clock you can implement logic)
                     Container(
                       height: 80,
                       width: 80,
@@ -167,11 +169,16 @@ class DashboardScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          TaskItem(title: 'Learning Programming by 12PM'),
-                          TaskItem(title: 'Learn how to cook by 1PM'),
-                          TaskItem(title: 'Learn how to play at 2PM'),
-                          TaskItem(title: 'Have lunch at 4PM'),
-                          TaskItem(title: 'Going to travel 6PM'),
+                          // Displaying tasks dynamically
+                          Consumer<TaskProvider>(
+                            builder: (context, taskProvider, child) {
+                              return Column(
+                                children: taskProvider.tasks.map((task) {
+                                  return TaskItem(title: task.title);
+                                }).toList(),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),

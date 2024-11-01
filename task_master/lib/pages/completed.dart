@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/task_providers.dart';
 
 class CompletedTaskScreen extends StatelessWidget {
   const CompletedTaskScreen({Key? key}) : super(key: key);
@@ -28,22 +30,27 @@ class CompletedTaskScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: List.generate(3, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: CompletedTaskItem(
-                      title: 'TODO TITLE',
-                      subtitle: 'TODO SUB TITLE',
-                    ),
+        child: Consumer<TaskProvider>(
+          builder: (context, taskProvider, child) {
+            // Filter only completed tasks
+            final completedTasks = taskProvider.tasks.where((task) => task.isCompleted).toList();
+
+            return completedTasks.isEmpty
+                ? const Center(child: Text('No completed tasks'))
+                : ListView.builder(
+                    itemCount: completedTasks.length,
+                    itemBuilder: (context, index) {
+                      final task = completedTasks[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: CompletedTaskItem(
+                          title: task.title,
+                          subtitle: task.description,
+                        ),
+                      );
+                    },
                   );
-                }),
-              ),
-            ),
-          ],
+          },
         ),
       ),
     );

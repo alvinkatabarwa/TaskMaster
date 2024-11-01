@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/task_providers.dart';
 import 'todo.dart';
 
 class EditTaskScreen extends StatelessWidget {
+  final int taskIndex;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController detailController = TextEditingController();
 
-  EditTaskScreen({Key? key}) : super(key: key);
+  EditTaskScreen({Key? key, required this.taskIndex}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<TaskProvider>(context);
+    final task = taskProvider.tasks[taskIndex];
+
+    // Initialize the controllers with the existing task data
+    titleController.text = task.title;
+    detailController.text = task.description;
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -17,7 +27,7 @@ class EditTaskScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Back to the previous screen
+            Navigator.pop(context);
           },
         ),
         title: const Text(
@@ -35,7 +45,6 @@ class EditTaskScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title TextField
             TextField(
               controller: titleController,
               decoration: const InputDecoration(
@@ -53,7 +62,6 @@ class EditTaskScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // Detail TextField
             TextField(
               controller: detailController,
               decoration: const InputDecoration(
@@ -74,13 +82,15 @@ class EditTaskScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Update Button
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TaskListScreen()),
+                    // Update task in the provider
+                    taskProvider.updateTask(
+                      taskIndex,
+                      titleController.text,
+                      detailController.text,
                     );
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
@@ -94,10 +104,9 @@ class EditTaskScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-                // Cancel Button
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Cancel and go back
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/task_providers.dart';
 import 'createTask.dart';
 import 'completed.dart';
 import 'editTask.dart';
@@ -9,15 +11,17 @@ class TaskListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<TaskProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        elevation: 0, // Remove shadow
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const DashboardScreen())); // Go back to the previous screen
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const DashboardScreen()));
           },
         ),
         title: const Text(
@@ -31,7 +35,7 @@ class TaskListScreen extends StatelessWidget {
         centerTitle: true,
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70), // Adjust the bottom padding
+        padding: const EdgeInsets.only(bottom: 70),
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -40,7 +44,7 @@ class TaskListScreen extends StatelessWidget {
             );
           },
           backgroundColor: Colors.teal,
-          shape: const CircleBorder(), // Ensures the button is rounded
+          shape: const CircleBorder(),
           child: const Icon(Icons.add, size: 30, color: Colors.white),
         ),
       ),
@@ -48,22 +52,24 @@ class TaskListScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            // Task list
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: 4,  // Number of tasks
+                itemCount: taskProvider.tasks.length,
                 itemBuilder: (context, index) {
-                  return TaskCard();
+                  return TaskCard(
+                    taskIndex: index,
+                    task: taskProvider.tasks[index],
+                    onDelete: () => taskProvider.removeTask(taskProvider.tasks[index]),
+                    onComplete: () => taskProvider.toggleTaskCompletion(taskProvider.tasks[index]),
+                  );
                 },
               ),
             ),
-            // Completed button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: ElevatedButton(
                 onPressed: () {
-                  // Completed button logic here
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const CompletedTaskScreen()),
@@ -93,9 +99,19 @@ class TaskListScreen extends StatelessWidget {
   }
 }
 
-// Task Card widget
 class TaskCard extends StatelessWidget {
-  const TaskCard({Key? key}) : super(key: key);
+  final int taskIndex;
+  final Task task;
+  final VoidCallback onDelete;
+  final VoidCallback onComplete;
+
+  const TaskCard({
+    Key? key,
+    required this.taskIndex,
+    required this.task,
+    required this.onDelete,
+    required this.onComplete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,50 +133,46 @@ class TaskCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Task Title and Subtitle
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  'TODO TITLE',
-                  style: TextStyle(
+                  task.title,
+                  style: const TextStyle(
                     color: Colors.teal,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
-                  'TODO SUB TITLE',
-                  style: TextStyle(
+                  task.description,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
                   ),
                 ),
               ],
             ),
-            // Action Buttons
             Row(
               children: [
                 IconButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditTaskScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => EditTaskScreen(taskIndex: taskIndex),
+                      ),
                     );
-                    },
+                  },
                   icon: const Icon(Icons.edit, color: Colors.teal),
                 ),
                 IconButton(
-                  onPressed: () {
-                    // Delete task logic here
-                  },
+                  onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),
                 ),
                 IconButton(
-                  onPressed: () {
-                    // Mark as complete logic here
-                  },
+                  onPressed: onComplete,
                   icon: const Icon(Icons.check_circle, color: Colors.teal),
                 ),
               ],
