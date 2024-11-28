@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/task_providers.dart';
+import '../providers/task_providers.dart' as provider_task;
+import '../models/task.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth to get current user
+import 'package:task_master/services/firestore_service.dart';
+import 'package:logging/logging.dart';
 
 class AddTaskScreen extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController detailController = TextEditingController();
+
+  final Logger _logger = Logger('CreateTaskPage');
+
+  AddTaskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'Add Task',
           style: TextStyle(
             fontSize: 24,
@@ -32,44 +40,69 @@ class AddTaskScreen extends StatelessWidget {
           children: [
             TextField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Title',
                 border: UnderlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: detailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Detail',
                 border: UnderlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal, // Background color
+                  backgroundColor: Colors.teal,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {
-                  final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-                  final newTask = Task(
-                    title: titleController.text,
-                    description: detailController.text,
-                  );
-                  taskProvider.addTask(newTask);  // Adds the task to global state
+                  final taskProvider = Provider.of<provider_task.TaskProvider>(
+                      context,
+                      listen: false);
+                  final user =
+                      FirebaseAuth.instance.currentUser; // Get current user
 
-                  // Navigate back to the previous screen
-                  Navigator.pop(context);
+                  if (user != null) {
+                    final newTask = provider_task.Task(
+                      title: titleController.text,
+                      description: detailController.text,
+                      isCompleted: false,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                      userId: user.uid, // Pass user ID
+                      id: DateTime.now()
+                          .millisecondsSinceEpoch
+                          .toString(), // Generate task ID
+                    );
+                    taskProvider.addTask(newTask);
+
+                    // Convert Task to Tasks if necessary
+                    Tasks tasks = Tasks.fromTask(newTask
+                        as Tasks); // Cast NewTask to Tasks if appropriate
+
+                    // Add task to Firestore
+                    FirestoreService().addTask(tasks);
+
+                    Navigator.pop(context);
+                  } else {
+                    _logger.warning("User not logged in");
+                  }
                 },
-                child: Text(
+                child: const Text(
                   'ADD',
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),

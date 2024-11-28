@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
 class Task {
+  String id;
   String title;
   String description;
   bool isCompleted;
+  DateTime createdAt; // Add createdAt
+  DateTime updatedAt; // Add updatedAt
+  String userId; // Add userId
 
-  Task({required this.title, required this.description, this.isCompleted = false});
+  Task({
+    required this.id,
+    required this.title,
+    required this.description,
+    this.isCompleted = false,
+    required this.createdAt, // Add to constructor
+    required this.updatedAt, // Add to constructor
+    required this.userId, // Add to constructor
+  });
 }
 
 class TaskProvider with ChangeNotifier {
-  List<Task> _tasks = [];
+  final List<Task> _tasks = [];
 
   List<Task> get tasks => _tasks;
 
@@ -37,4 +49,3 @@ class TaskProvider with ChangeNotifier {
     }
   }
 }
-
