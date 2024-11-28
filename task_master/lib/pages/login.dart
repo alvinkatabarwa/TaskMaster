@@ -5,7 +5,7 @@ import 'register.dart';
 import '../providers/login_providers.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                     // Forgot password logic
                   },
                   child: const Text(
-                    'Forget password ?',
+                    'Forget password?',
                     style: TextStyle(
                       color: Colors.teal,
                       fontSize: 14,
@@ -95,18 +95,27 @@ class LoginScreen extends StatelessWidget {
               // Login Button
               ElevatedButton(
                 onPressed: loginProvider.isLoginValid
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DashboardScreen()),
-                        );
+                    ? () async {
+                        await loginProvider.loginUser();
+                        if (loginProvider.errorMessage.isEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DashboardScreen()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(loginProvider.errorMessage),
+                            ),
+                          );
+                        }
                       }
-                    : null, // Disable button if inputs are invalid
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 100, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -122,7 +131,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don't have an account ? ",
+                    "Don't have an account? ",
                     style: TextStyle(fontSize: 14),
                   ),
                   GestureDetector(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'register.dart';
+
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 30), // Space at the top
+            const SizedBox(height: 30), // Space at the top
             Center(
               child: Image.asset(
                 'assets/images/welcomeImage.png', // Update with your image name
@@ -19,24 +20,24 @@ class WelcomeScreen extends StatelessWidget {
                 width: 200,
               ),
             ),
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 30),
+            const Text(
               'TASK MASTER',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
                 'Stay on top of your tasks with ease. Organize, prioritize, and accomplish your goals, one step at a time. Simple, efficient, and built to help you succeed!',
                 style: TextStyle(fontSize: 16, color: Colors.black54),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -46,12 +47,13 @@ class WelcomeScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal, // Button background color
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Get Started',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
