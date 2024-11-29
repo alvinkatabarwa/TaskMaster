@@ -16,6 +16,9 @@
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Folder Structure](#folder-structure)
+- [Security Rules](#security-rules)
+- [Authentication Methods](#authentication-methods)
+- [Usage](#usage)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -45,6 +48,7 @@ Follow the instructions below to get your local copy running.
 1. **Clone the repo**:
    ```sh
    git clone https://github.com/alvinkatabarwa/task-master.git
+   ```
 
 2. **Navigate to the project directory:**
 
@@ -71,9 +75,46 @@ Follow the instructions below to get your local copy running.
    flutter run
    ```
 
+## 🔒 Security Rules
+
+To ensure data security and integrity, the following Firebase Firestore security rules are applied:
+```bash
+json
+service cloud.firestore {
+match /databases/{database}/documents {
+match /tasks/{taskId} {
+allow read, write: if request.auth != null;
+}
+}
+}
+```
+
+These rules ensure that only authenticated users can read and write to the `tasks` collection.
+
+## 🔑 Authentication Methods
+
+The app uses Firebase Authentication with the following method:
+
+- **Email and Password Authentication**: Users can sign up and log in using their email addresses and passwords.
+
+## 📱 Usage
+
+1. **Sign Up / Log In**: Users can create an account or log in using their email and password.
+2. **Manage Tasks**: Once logged in, users can add, edit, delete, and mark tasks as completed.
+3. **Settings**: Users can switch between light and dark mode themes.
+
 ## Contributors
 
 - **Prisca Uwase**: Worked on the design and implementation of the first pages.
 - **Alvin Katabarwa**: Worked on the front-end of the app and state management.
-- **Rene Ntabana**: Worked on setting up the backend and it's functionalities.
+- **Rene Ntabana**: Worked on setting up the backend and its functionalities.
 
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+- **Prisca Uwase**: [Email](mailto:prisca@example.com)
+- **Alvin Katabarwa**: [Email](mailto:alvin@example.com)
+- **Rene Ntabana**: [Email](mailto:rene@example.com)
