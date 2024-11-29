@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/task_providers.dart' as provider_task;
+import '../providers/task_providers.dart'; // Renamed file to reflect class name
 import '../models/task.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth to get current user
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_master/services/firestore_service.dart';
 import 'package:logging/logging.dart';
 
@@ -10,7 +10,7 @@ class AddTaskScreen extends StatelessWidget {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController detailController = TextEditingController();
 
-  final Logger _logger = Logger('CreateTaskPage');
+  final Logger _logger = Logger('AddTaskScreen');
 
   AddTaskScreen({super.key});
 
@@ -20,9 +20,7 @@ class AddTaskScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Add Task',
@@ -65,44 +63,41 @@ class AddTaskScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  final taskProvider = Provider.of<provider_task.TaskProvider>(
-                      context,
-                      listen: false);
-                  final user =
-                      FirebaseAuth.instance.currentUser; // Get current user
+                  final taskProvider =
+                      Provider.of<TaskProvider>(context, listen: false);
+                  final user = FirebaseAuth.instance.currentUser;
 
                   if (user != null) {
-                    final newTask = provider_task.Task(
+                    final newTask = Task(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
                       title: titleController.text,
                       description: detailController.text,
                       isCompleted: false,
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
-                      userId: user.uid, // Pass user ID
-                      id: DateTime.now()
-                          .millisecondsSinceEpoch
-                          .toString(), // Generate task ID
+                      userId: user.uid,
                     );
+
+                    // Add task to local provider
                     taskProvider.addTask(newTask);
 
-                    // Convert Task to Tasks if necessary
-                    Tasks tasks = Tasks.fromTask(newTask
-                        as Tasks); // Cast NewTask to Tasks if appropriate
+                    // Save task to Firestore
+                    FirestoreService().addTask(newTask);
 
-                    // Add task to Firestore
-                    FirestoreService().addTask(tasks);
-
+                    _logger
+                        .info('Task added successfully for user: ${user.uid}');
                     Navigator.pop(context);
                   } else {
-                    _logger.warning("User not logged in");
+                    _logger.warning('User not logged in');
                   }
                 },
                 child: const Text(
                   'ADD',
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

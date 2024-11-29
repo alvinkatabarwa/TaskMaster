@@ -5,6 +5,7 @@ import 'createTask.dart';
 import 'completed.dart';
 import 'editTask.dart';
 import 'dashboard.dart';
+import '../models/task.dart';
 
 class TaskListScreen extends StatelessWidget {
   const TaskListScreen({Key? key}) : super(key: key);
@@ -21,7 +22,10 @@ class TaskListScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const DashboardScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DashboardScreen()));
           },
         ),
         title: const Text(
@@ -60,8 +64,10 @@ class TaskListScreen extends StatelessWidget {
                   return TaskCard(
                     taskIndex: index,
                     task: taskProvider.tasks[index],
-                    onDelete: () => taskProvider.removeTask(taskProvider.tasks[index]),
-                    onComplete: () => taskProvider.toggleTaskCompletion(taskProvider.tasks[index]),
+                    onDelete: () =>
+                        taskProvider.removeTask(taskProvider.tasks[index]),
+                    onComplete: () => taskProvider
+                        .toggleTaskCompletion(taskProvider.tasks[index]),
                   );
                 },
               ),
@@ -72,7 +78,8 @@ class TaskListScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CompletedTaskScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const CompletedTaskScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -161,7 +168,8 @@ class TaskCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditTaskScreen(taskIndex: taskIndex),
+                        builder: (context) =>
+                            EditTaskScreen(taskIndex: taskIndex),
                       ),
                     );
                   },

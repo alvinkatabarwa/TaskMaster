@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_providers.dart';
-import 'todo.dart';
+import '../models/task.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:task_master/services/firestore_service.dart';
+import 'package:logging/logging.dart';
 
 class EditTaskScreen extends StatelessWidget {
   final int taskIndex;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController detailController = TextEditingController();
+
+  final Logger _logger = Logger('EditTaskScreen');
 
   EditTaskScreen({Key? key, required this.taskIndex}) : super(key: key);
 
@@ -84,13 +89,35 @@ class EditTaskScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Update task in the provider
-                    taskProvider.updateTask(
-                      taskIndex,
-                      titleController.text,
-                      detailController.text,
-                    );
-                    Navigator.pop(context);
+                    final user = FirebaseAuth.instance.currentUser;
+
+                    if (user != null) {
+                      final updatedTask = Task(
+                        id: task.id,
+                        title: titleController.text,
+                        description: detailController.text,
+                        isCompleted: task.isCompleted,
+                        createdAt: task.createdAt,
+                        updatedAt: DateTime.now(),
+                        userId: user.uid,
+                      );
+
+                      // Update task in local provider
+                      taskProvider.updateTask(
+                        taskIndex.toString(),
+                        titleController.text,
+                        detailController.text,
+                      );
+
+                      // Update task in Firestore
+                      FirestoreService().updateTask(updatedTask);
+
+                      _logger.info(
+                          'Task updated successfully for user: ${user.uid}');
+                      Navigator.pop(context);
+                    } else {
+                      _logger.warning('User not logged in');
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,

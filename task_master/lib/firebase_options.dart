@@ -64,6 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1080848613173',
     projectId: 'taskmaster-15c72',
     storageBucket: 'taskmaster-15c72.firebasestorage.app',
+    iosClientId: '1080848613173-vl5n8sn0g1qjr0af4v77ndba93moo461.apps.googleusercontent.com',
     iosBundleId: 'com.example.taskMaster',
   );
 
@@ -73,6 +74,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1080848613173',
     projectId: 'taskmaster-15c72',
     storageBucket: 'taskmaster-15c72.firebasestorage.app',
+    iosClientId: '1080848613173-vl5n8sn0g1qjr0af4v77ndba93moo461.apps.googleusercontent.com',
     iosBundleId: 'com.example.taskMaster',
   );
 
@@ -85,4 +87,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'taskmaster-15c72.firebasestorage.app',
     measurementId: 'G-MDV24HPW5W',
   );
+
 }

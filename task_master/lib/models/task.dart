@@ -1,60 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Tasks {
-  String title;
-  String description;
-  bool isCompleted;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String userId; // To store the user ID
-  int id; // Task ID
+class Task {
+  final String id;
+  final String title;
+  final String description;
+  final bool isCompleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String userId;
 
-  Tasks({
+  Task({
+    required this.id,
     required this.title,
     required this.description,
     this.isCompleted = false,
     required this.createdAt,
     required this.updatedAt,
     required this.userId,
-    required this.id,
   });
 
-  // Convert a Task object to a map for Firestore
+  // Convert Task to a map for Firestore
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'description': description,
-      'completed': isCompleted,
-      'created_at': createdAt,
-      'updated_at': updatedAt,
-      'user_id': userId,
-      'id': id,
+      'isCompleted': isCompleted,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'userId': userId,
     };
   }
 
-  // Create a Task object from a Firestore document
-  factory Tasks.fromMap(Map<String, dynamic> map) {
-    return Tasks(
+  // Create a Task from Firestore map
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return Task(
+      id: map['id'],
       title: map['title'],
       description: map['description'],
-      isCompleted: map['completed'],
-      createdAt: (map['created_at'] as Timestamp).toDate(),
-      updatedAt: (map['updated_at'] as Timestamp).toDate(),
-      userId: map['user_id'],
-      id: map['id'],
-    );
-  }
-
-  // Add the fromTask method
-  static Tasks fromTask(Tasks task) {
-    return Tasks(
-      title: task.title,
-      description: task.description,
-      isCompleted: task.isCompleted,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-      userId: task.userId,
-      id: task.id,
+      isCompleted: map['isCompleted'],
+      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      userId: map['userId'],
     );
   }
 }
