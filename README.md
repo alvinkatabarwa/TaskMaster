@@ -44,4 +44,36 @@ Follow the instructions below to get your local copy running.
 
 1. **Clone the repo**:
    ```sh
-   git clone https://github.com/your-username/task-master.git
+   git clone https://github.com/alvinkatabarwa/task-master.git
+
+2. **Navigate to the project directory:**
+
+   ```bash
+   cd task_master
+   ```
+
+3. **Install dependencies:**
+
+   ```bash
+   flutter pub get
+   ```
+
+4. **Set up Firebase:**
+
+   - Go to the [Firebase Console](https://console.firebase.google.com/).
+   - Create a new project or use an existing one.
+   - Add an Android/iOS app to your Firebase project.
+   - Download the `google-services.json` (for Android) or `GoogleService-Info.plist` (for iOS) and place it in the appropriate directory in your Flutter project.
+
+5. **Run the app:**
+
+   ```bash
+   flutter run
+   ```
+
+## Contributors
+
+- **Prisca Uwase**: Worked on the design and implementation of the first pages.
+- **Alvin Katabarwa**: Worked on the front-end of the app and state management.
+- **Rene Ntabana**: Worked on setting up the backend and it's functionalities.
+
