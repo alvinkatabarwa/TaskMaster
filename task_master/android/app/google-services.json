@@ -12,7 +12,12 @@
           "package_name": "com.taskmaster.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1080848613173-q6egadia9r8kn5v80nl277rao472e462.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDP4iAOqTAAUo8CUkGqFko6ZVdS7H1pOBQ"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080848613173-q6egadia9r8kn5v80nl277rao472e462.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1080848613173-vl5n8sn0g1qjr0af4v77ndba93moo461.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.taskMaster"
+              }
+            }
+          ]
         }
       }
     }

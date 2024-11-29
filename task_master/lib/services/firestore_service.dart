@@ -9,7 +9,7 @@ class FirestoreService {
   final Logger _logger = Logger('FirestoreService');
 
   // Add a task to Firestore
-  Future<void> addTask(Tasks task) async {
+  Future<void> addTask(Task task) async {
     try {
       final user = _auth.currentUser; // Get the current user
       if (user == null) {
@@ -35,6 +35,32 @@ class FirestoreService {
       _logger.info("Task added with ID: $taskId");
     } catch (e) {
       _logger.severe("Error adding task: $e");
+    }
+  }
+
+  // Method to update task details
+  Future<void> updateTask(Task task) async {
+    try {
+      final tasksRef = _db.collection('tasks');
+      await tasksRef.doc(task.id).update({
+        'title': task.title,
+        'description': task.description,
+        'completed': task.isCompleted,
+        'updated_at': DateTime.now(),
+      });
+
+      _logger.info("Task updated with ID: ${task.id}");
+    } catch (e) {
+      _logger.severe("Error updating task: $e");
+    }
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    try {
+      await FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
+      _logger.info('Task deleted successfully');
+    } catch (e) {
+      _logger.severe('Error deleting task: $e');
     }
   }
 
